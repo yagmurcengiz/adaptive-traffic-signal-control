@@ -8,9 +8,11 @@ kafka:
 simulation:
   step_length_sec: 1.0
   intersections:
-    - "J1"  # Harita oluştuktan sonra gerçek SUMO kavşak ID'leri ile güncellenecek
-    - "J2"
-    - "J3"
+    - "6520959034"
+    - "9449574120"
+    - "9687658209"
+    - "9800118176"
+    - "cluster_1295374310_4883615017_6520929986_9585907953"
 
 thresholds:
   window_sec: 10
@@ -26,3 +28,4 @@ thresholds:
     high:
       min_queue_length: 13
       min_wait_time_sec: 36.0
+

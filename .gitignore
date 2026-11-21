@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# Ortam değişkenleri
+.env
+
+# SUMO çıktı ve logları
+*.log
+simulation/outputs/
+
+# Spark & Veri hacimleri
+spark-warehouse/
+checkpoints/
+data/
+
+# IDE ve İşletim Sistemi
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

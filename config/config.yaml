@@ -1,0 +1,28 @@
+kafka:
+  bootstrap_servers: "kafka:9092"
+  topics:
+    raw_traffic: "traffic.raw.events"          # SUMO Producer -> Kafka
+    aggregated_metrics: "traffic.metrics.5s"   # Spark -> Karar Servisi
+    signal_decisions: "traffic.signal.actions" # Karar Servisi -> Log / Grafana
+
+simulation:
+  step_length_sec: 1.0
+  intersections:
+    - "J1"  # Harita oluştuktan sonra gerçek SUMO kavşak ID'leri ile güncellenecek
+    - "J2"
+    - "J3"
+
+thresholds:
+  window_sec: 10
+  consecutive_windows: 3     # Kaç ardışık pencerede eşik aşılırsa plan değişsin
+  min_control_interval: 30   # Sinyal planı değiştikten sonra minimum bekleme süresi (sn)
+  levels:
+    low:
+      max_queue_length: 5
+      max_wait_time_sec: 15.0
+    medium:
+      max_queue_length: 12
+      max_wait_time_sec: 35.0
+    high:
+      min_queue_length: 13
+      min_wait_time_sec: 36.0

@@ -1,0 +1,6 @@
+confluent-kafka
+clickhouse-connect
+pandas
+matplotlib
+pyyaml
+python-dotenv

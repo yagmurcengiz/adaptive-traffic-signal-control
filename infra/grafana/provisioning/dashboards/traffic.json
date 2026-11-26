@@ -1,0 +1,108 @@
+{
+  "id": 1,
+  "type": "timeseries",
+  "title": "Kuyruk Uzunluğu(K1)",
+  "gridPos": {
+    "x": 0,
+    "y": 0,
+    "h": 8,
+    "w": 12
+  },
+  "fieldConfig": {
+    "defaults": {
+      "custom": {
+        "drawStyle": "line",
+        "lineInterpolation": "linear",
+        "barAlignment": 0,
+        "barWidthFactor": 0.6,
+        "lineWidth": 1,
+        "fillOpacity": 0,
+        "gradientMode": "none",
+        "spanNulls": false,
+        "insertNulls": false,
+        "showPoints": "auto",
+        "pointSize": 5,
+        "stacking": {
+          "mode": "none",
+          "group": "A"
+        },
+        "axisPlacement": "auto",
+        "axisLabel": "",
+        "axisColorMode": "text",
+        "axisBorderShow": false,
+        "scaleDistribution": {
+          "type": "linear"
+        },
+        "axisCenteredZero": false,
+        "hideFrom": {
+          "tooltip": false,
+          "viz": false,
+          "legend": false
+        },
+        "thresholdsStyle": {
+          "mode": "off"
+        }
+      },
+      "color": {
+        "mode": "palette-classic"
+      },
+      "mappings": [],
+      "thresholds": {
+        "mode": "absolute",
+        "steps": [
+          {
+            "color": "green",
+            "value": null
+          },
+          {
+            "color": "red",
+            "value": 80
+          }
+        ]
+      }
+    },
+    "overrides": []
+  },
+  "pluginVersion": "11.3.0",
+  "targets": [
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "ag5g17ndw2vi8b"
+      },
+      "editorType": "sql",
+      "format": 1,
+      "meta": {
+        "builderOptions": {
+          "columns": [],
+          "database": "",
+          "limit": 1000,
+          "meta": {},
+          "mode": "list",
+          "queryType": "table",
+          "table": ""
+        }
+      },
+      "pluginVersion": "4.24.0",
+      "queryType": "table",
+      "rawSql": "SELECT window_start AS time, avg_queue\r\nFROM traffic.traffic_metrics\r\nWHERE $__timeFilter(window_start) AND tls_id = 'K1'\r\nORDER BY time",
+      "refId": "A"
+    }
+  ],
+  "datasource": {
+    "type": "grafana-clickhouse-datasource",
+    "uid": "ag5g17ndw2vi8b"
+  },
+  "options": {
+    "tooltip": {
+      "mode": "single",
+      "sort": "none"
+    },
+    "legend": {
+      "showLegend": true,
+      "displayMode": "list",
+      "placement": "bottom",
+      "calcs": []
+    }
+  }
+}

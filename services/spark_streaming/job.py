@@ -67,6 +67,7 @@ metrics = (parsed
 def write_batch(df, batch_id):
     if df.rdd.isEmpty():
         return
+    df = df.withColumn("processed_ts", F.current_timestamp().cast("double"))
     df.persist()
     # 1) Kafka'ya (karar servisi buradan okuyacak)
     (df.select(F.col("tls_id").alias("key"),

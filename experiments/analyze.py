@@ -1,11 +1,22 @@
+"""run_summary tablosundan fixed vs adaptive karşılaştırması üretir.
+
+Çıktılar experiments/results/ altına yazılır:
+  - summary_stats.csv : senaryo x kontrol bazında ortalama ve standart sapma
+  - improvement.csv   : yüzde iyileşme tablosu
+  - <metrik>.png      : her metrik için karşılaştırma grafiği
+"""
 import os
 
 import clickhouse_connect
+import matplotlib
+
+matplotlib.use("Agg")  # ekran gerektirmeyen backend
 import matplotlib.pyplot as plt
 import pandas as pd
 from dotenv import load_dotenv
 
 load_dotenv()
+
 client = clickhouse_connect.get_client(
     host="localhost",
     port=int(os.getenv("CLICKHOUSE_HTTP_PORT", "8123")),
@@ -13,10 +24,13 @@ client = clickhouse_connect.get_client(
     password=os.environ["CLICKHOUSE_PASSWORD"],
     database=os.getenv("CLICKHOUSE_DB", "traffic"),
 )
+
 OUT = "experiments/results"
 os.makedirs(OUT, exist_ok=True)
 
 df = client.query_df("SELECT * FROM run_summary")
+if df.empty:
+    raise SystemExit("run_summary tablosu boş. Önce fake_summary.py çalıştır.")
 
 # Düşük olması iyi olanlar / yüksek olması iyi olanlar
 LOWER_BETTER = ["avg_waiting", "avg_queue", "avg_travel_time", "total_stops", "co2_mg"]
@@ -24,33 +38,41 @@ HIGHER_BETTER = ["avg_speed", "throughput"]
 METRICS = LOWER_BETTER + HIGHER_BETTER
 
 # 1) Senaryo x kontrol bazında ortalama ve standart sapma
-stats = df.groupby(["scenario", "controller"])[METRICS].agg(["mean", "std"])
-stats.to_csv(f"{OUT}/summary_stats.csv")
+grouped = df.groupby(["scenario", "controller"])[METRICS]
+grouped.agg(["mean", "std"]).to_csv(f"{OUT}/summary_stats.csv")
+means = grouped.mean()
+stds = grouped.std()
 
-# 2) Yüzde iyileşme
-means = df.groupby(["scenario", "controller"])[METRICS].mean()
+# 2) Yüzde iyileşme: (fixed - adaptive) / fixed * 100
+#    Yüksek olması iyi olan metriklerde işaret ters çevrilir.
 rows = []
-for sc in sorted(df["scenario"].unique()):
-    for m in METRICS:
-        fixed = means.loc[(sc, "fixed"), m]
-        adap = means.loc[(sc, "adaptive"), m]
-        pct = (fixed - adap) / fixed * 100 if m in LOWER_BETTER else (adap - fixed) / fixed * 100
-        rows.append({"scenario": sc, "metric": m, "fixed": fixed,
-                     "adaptive": adap, "improvement_pct": pct})
-imp = pd.DataFrame(rows)
-imp.to_csv(f"{OUT}/improvement.csv", index=False)
-print(imp.round(2).to_string(index=False))
+for scenario in sorted(df["scenario"].unique()):
+    for metric in METRICS:
+        fixed = means.loc[(scenario, "fixed"), metric]
+        adaptive = means.loc[(scenario, "adaptive"), metric]
+        if metric in LOWER_BETTER:
+            pct = (fixed - adaptive) / fixed * 100
+        else:
+            pct = (adaptive - fixed) / fixed * 100
+        rows.append({
+            "scenario": scenario, "metric": metric,
+            "fixed": fixed, "adaptive": adaptive, "improvement_pct": pct,
+        })
 
-# 3) Grafikler: her metrik için senaryo bazlı fixed vs adaptive
-for m in METRICS:
-    piv_mean = means[m].unstack("controller")
-    piv_std = df.groupby(["scenario", "controller"])[m].std().unstack("controller")
-    ax = piv_mean[["fixed", "adaptive"]].plot(
-        kind="bar", yerr=piv_std[["fixed", "adaptive"]], capsize=3, figsize=(6, 4))
-    ax.set_title(m)
+improvement = pd.DataFrame(rows)
+improvement.to_csv(f"{OUT}/improvement.csv", index=False)
+print(improvement.round(2).to_string(index=False))
+
+# 3) Grafikler: her metrik için senaryo bazında fixed vs adaptive
+for metric in METRICS:
+    mean_piv = means[metric].unstack("controller")[["fixed", "adaptive"]]
+    std_piv = stds[metric].unstack("controller")[["fixed", "adaptive"]].fillna(0)
+    ax = mean_piv.plot(kind="bar", yerr=std_piv, capsize=3, figsize=(6, 4))
+    ax.set_title(metric)
     ax.set_xlabel("Senaryo")
     plt.xticks(rotation=0)
     plt.tight_layout()
-    plt.savefig(f"{OUT}/{m}.png", dpi=150)
+    plt.savefig(f"{OUT}/{metric}.png", dpi=150)
     plt.close()
-print("Çıktılar:", OUT)
+
+print(f"\nÇıktılar: {OUT}/")

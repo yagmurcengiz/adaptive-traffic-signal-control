@@ -864,11 +864,22 @@
         "query": {
           "editorType": "sql",
           "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.24.0",
           "queryType": "table",
           "rawSql": "SELECT DISTINCT run_id FROM traffic.traffic_metrics ORDER BY run_id",
           "refId": "var"
         },
-        "refresh": 1,
+        "refresh": 2,
         "regex": "",
         "sort": 1,
         "type": "query"

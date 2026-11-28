@@ -71,10 +71,12 @@ services:
       TOPIC_RAW: ${TOPIC_RAW}
       TOPIC_METRICS: ${TOPIC_METRICS}
       TOPIC_COMMANDS: ${TOPIC_COMMANDS}
+      TOPIC_APPLIED: ${TOPIC_APPLIED}
+      TOPIC_RUN_EVENTS: ${TOPIC_RUN_EVENTS}      
     entrypoint: ["/bin/bash", "-c"]
     command:
       - |
-        for t in $$TOPIC_RAW $$TOPIC_METRICS $$TOPIC_COMMANDS; do
+        for t in $$TOPIC_RAW $$TOPIC_METRICS $$TOPIC_COMMANDS $$TOPIC_APPLIED $$TOPIC_RUN_EVENTS; do
           /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic $$t --bootstrap-server kafka:9092 --partitions 1 --replication-factor 1
         done
     restart: "no"

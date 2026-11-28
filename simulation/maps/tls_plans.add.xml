@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='utf-8'?>
+<additional>
+  <tlLogic id="6520959034" type="static" programID="A" offset="0">
+    <phase duration="82" state="G" />
+    <phase duration="3" state="y" />
+    <phase duration="5" state="r" />
+  </tlLogic>
+  <tlLogic id="6520959034" type="static" programID="B" offset="0">
+    <phase duration="131" state="G" />
+    <phase duration="3" state="y" />
+    <phase duration="5" state="r" />
+  </tlLogic>
+  <tlLogic id="6520959034" type="static" programID="C" offset="0">
+    <phase duration="57" state="G" />
+    <phase duration="3" state="y" />
+    <phase duration="5" state="r" />
+  </tlLogic>
+  <tlLogic id="9449574120" type="static" programID="A" offset="0">
+    <phase duration="82" state="GG" />
+    <phase duration="3" state="yy" />
+    <phase duration="5" state="rr" />
+  </tlLogic>
+  <tlLogic id="9449574120" type="static" programID="B" offset="0">
+    <phase duration="131" state="GG" />
+    <phase duration="3" state="yy" />
+    <phase duration="5" state="rr" />
+  </tlLogic>
+  <tlLogic id="9449574120" type="static" programID="C" offset="0">
+    <phase duration="57" state="GG" />
+    <phase duration="3" state="yy" />
+    <phase duration="5" state="rr" />
+  </tlLogic>
+  <tlLogic id="cluster_1295374310_4883615017_6520929986_9585907953" type="static" programID="A" offset="0">
+    <phase duration="27" state="GGGrr" />
+    <phase duration="3" state="yyyrr" />
+    <phase duration="27" state="rrrGG" />
+    <phase duration="3" state="rrryy" />
+    <phase duration="30" state="GGGrr" />
+  </tlLogic>
+  <tlLogic id="cluster_1295374310_4883615017_6520929986_9585907953" type="static" programID="B" offset="0">
+    <phase duration="43" state="GGGrr" />
+    <phase duration="3" state="yyyrr" />
+    <phase duration="19" state="rrrGG" />
+    <phase duration="3" state="rrryy" />
+    <phase duration="21" state="GGGrr" />
+  </tlLogic>
+  <tlLogic id="cluster_1295374310_4883615017_6520929986_9585907953" type="static" programID="C" offset="0">
+    <phase duration="19" state="GGGrr" />
+    <phase duration="3" state="yyyrr" />
+    <phase duration="43" state="rrrGG" />
+    <phase duration="3" state="rrryy" />
+    <phase duration="48" state="GGGrr" />
+  </tlLogic>
+</additional>

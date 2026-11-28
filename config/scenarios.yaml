@@ -1,0 +1,18 @@
+run_duration_sec: 1800
+seeds: [11, 22, 33]
+
+intersections:
+  K1: "6520959034"
+  K2: "9449574120"
+  K3: "cluster_1295374310_4883615017_6520929986_9585907953"
+
+scenarios:
+  S1:
+    name: "normal_flow"
+    route_file: "simulation/scenarios/S1_normal.rou.xml"
+  S2:
+    name: "rush_hour"
+    route_file: "simulation/scenarios/S2_rush.rou.xml"
+  S3:
+    name: "incident_bottleneck"
+    route_file: "simulation/scenarios/S3_incident.rou.xml"

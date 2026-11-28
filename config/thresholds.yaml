@@ -1,0 +1,14 @@
+window_sec: 10
+consecutive_windows: 3
+min_control_interval_sec: 30
+
+levels:
+  low:
+    max_queue: 5
+    max_waiting_sec: 15.0
+  medium:
+    max_queue: 12
+    max_waiting_sec: 35.0
+  high:
+    min_queue: 13
+    min_waiting_sec: 36.0

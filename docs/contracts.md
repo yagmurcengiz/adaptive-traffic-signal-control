@@ -3,7 +3,7 @@
 Bu dosya, SUMO tarafı ile veri hattı tarafı arasındaki **tek gerçek kaynaktır**.
 Alan adı veya tip değişecekse önce bu dosya güncellenir, sonra kod.
 
-> `[TARTIŞILACAK]` etiketli maddeler iki tarafın onayını bekliyor. Önerilen varsayılan değer yazılıdır.
+etiketli maddeler iki tarafın onayını bekliyor. Önerilen varsayılan değer yazılıdır.
 
 ## 1. Genel kurallar
 
@@ -25,7 +25,7 @@ Alan adı veya tip değişecekse önce bu dosya güncellenir, sonra kod.
 | `control.applied` | sumo_bridge | event_sink | `TOPIC_APPLIED` (yeni) |
 | `run.events` (opsiyonel) | sumo_bridge | experiments | `TOPIC_RUN_EVENTS` (yeni) |
 
-`[TARTIŞILACAK]` `control.applied` ve `run.events` topic'leri eklensin mi? Önerim: evet.
+`control.applied` ve `run.events` topic'leri eklensin mi? Önerim: evet.
 Gerekçe: komutun uygulandığı an (`applied_ts`) yalnızca sumo_bridge'de bilinir.
 
 ## 3. `traffic.raw`
@@ -64,9 +64,9 @@ Gerekçe: komutun uygulandığı an (`applied_ts`) yalnızca sumo_bridge'de bili
 | `occupancy` | float | doluluk, 0-1 | `lane.getLastStepOccupancy` / 100 |
 | `produced_ts` | float | mesajın üretildiği gerçek an | `time.time()` |
 
-`[TARTIŞILACAK]` TraCI `getLastStepOccupancy` yüzde döndürür (0-100). Önerim: bridge 100'e bölüp 0-1 yollasın.
-`[TARTIŞILACAK]` `waiting_time` şerit toplamı mı, araç başına ortalama mı? Önerim: şerit toplamı.
-`[TARTIŞILACAK]` `lane_id` yerine `tls_id` bazında toplanmış tek mesaj mı? Önerim: şerit bazlı kalsın, toplama Spark'ta yapılır.
+TraCI `getLastStepOccupancy` yüzde döndürür (0-100). Önerim: bridge 100'e bölüp 0-1 yollasın.
+`waiting_time` şerit toplamı mı, araç başına ortalama mı? Önerim: şerit toplamı.
+`lane_id` yerine `tls_id` bazında toplanmış tek mesaj mı? Önerim: şerit bazlı kalsın, toplama Spark'ta yapılır.
 
 ## 4. `traffic.metrics`
 
@@ -94,7 +94,7 @@ Gerekçe: komutun uygulandığı an (`applied_ts`) yalnızca sumo_bridge'de bili
 - `max_produced_ts`: pencerede görülen en son `produced_ts`. Karar servisi bunu `trigger_produced_ts` olarak kopyalar.
 - Pencereler kayar olduğundan aynı `tls_id` için üst üste binen pencereler gelir. Karar servisi `window_end` ile sıralamalı, tekrarları dikkate almalıdır.
 
-`[TARTIŞILACAK]` Karar servisi pencere kayması yüzünden her pencerede mi karar versin, yoksa yalnızca `window_end` sınırında mı? Önerim: her mesajda değerlendir, "ardışık pencere" sayacını `window_end` değişimine göre artır.
+Karar servisi pencere kayması yüzünden her pencerede mi karar versin, yoksa yalnızca `window_end` sınırında mı? Önerim: her mesajda değerlendir, "ardışık pencere" sayacını `window_end` değişimine göre artır.
 
 ## 5. `control.commands`
 
@@ -164,7 +164,7 @@ Hesaplama `control_events` tablosunda yapılır (Grafana ve `analyze.py` kullan�
 | Karar servisi minimum kontrol aralığı | 30 sim sn | `config/thresholds.yaml` |
 | Koşu süresi | 1800 sim sn | `config/scenarios.yaml` |
 
-`[TARTIŞILACAK]` Spark pencereleri **gerçek zamana** göre işler. Simülasyon hızlandırılırsa pencere = daha çok sim saniyesi demektir. Hız oranı sabit tutulmalı ve raporda belirtilmeli.
+Spark pencereleri **gerçek zamana** göre işler. Simülasyon hızlandırılırsa pencere = daha çok sim saniyesi demektir. Hız oranı sabit tutulmalı ve raporda belirtilmeli.
 
 ## 10. Kimlikler ve adlandırma
 
@@ -176,12 +176,12 @@ Hesaplama `control_events` tablosunda yapılır (Grafana ve `analyze.py` kullan�
 
 `[TARTIŞILACAK]` Fixed koşusunda da bridge aynı mesajları `traffic.raw`'a yollar (Spark ve Grafana aynı akışla çalışsın), ancak decision_service çalışmaz ya da komut üretmez. Önerim: evet, `controller=fixed` etiketiyle.
 
-## 12. Açık sorular (akşam toplantısı)
+## 12. Alınan kararlar
 
-1. `control.applied` ve `run.events` topic'leri kabul mü?
-2. Occupancy ve waiting_time birimleri (Bölüm 3)
-3. Hız oranı ve örnekleme aralığı
-4. Plan A/B/C faz tanımları ve süreleri
-5. TLS id eşlemesi (K1, K2, K3 hangi SUMO id'leri)
-6. Birden fazla koşu aynı anda mı, sırayla mı çalışacak? (Önerim: sırayla)
-7. Bridge, mesajları sıkıştırmadan mı yollayacak? (Önerim: evet, düz JSON)
+1. `control.applied` ve `run.events` topic'leri eklendi.
+2. `occupancy` 0-1 aralığındadır, bridge 100'e bölüp gönderir.
+3. `waiting_time` şerit toplamıdır.
+4. Mesajlar şerit bazlıdır, kavşak toplamını Spark hesaplar.
+5. `SIM_PACE` başlangıçta 0.2, ölçümle ayarlanacak.
+6. Koşular sırayla çalışır.
+7. Mesajlar düz JSON'dur.
